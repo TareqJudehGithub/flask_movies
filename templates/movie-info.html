@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    {% extends 'template.html' %}
+    {% block head %}
+    {{ super() }}
+    {% endblock %}
+  </head>
+  <body>
+    {% block content %}
+    <div class="col-sm">
+      <div class="col-sm mb-3">
+        <div class="card" style="width: 18rem;">
+          <img src="{{ movie.Poster}}" class="card-img-top" alt="movie poster">
+          <div class="card-body">
+            <h5 class="card-title">{{ movie.Title | title }}</h5>
+            <p class="card-text">{{ movie.Year }}</p>
+
+          </div>
+        </div>
+
+      </div>
+      {% endblock %}
+  </body>
+</html>

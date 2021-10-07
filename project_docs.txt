@@ -1,0 +1,17 @@
+Movies Search project 
+
+Libraries/dependencies
+
+Name        Description                               Installation
+venv        Virtual environment for project lib/dep.   
+Flask       Main backend server framework.             $ pip install flask
+requests    HTTP requests library
+OMDB API    Movie Database
+Bootstrap v5.1.2
+
+
+
+OMDB parameters used
+  Parameter       Description
+  s             Searches matching keywords for movie titles.
+  t             Searches matching keywords for a movie title.
