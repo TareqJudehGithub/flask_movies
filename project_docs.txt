@@ -15,3 +15,6 @@ OMDB parameters used
   Parameter       Description
   s             Searches matching keywords for movie titles.
   t             Searches matching keywords for a movie title.
+
+
+Extensions

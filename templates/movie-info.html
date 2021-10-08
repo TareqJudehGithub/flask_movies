@@ -8,18 +8,42 @@
   </head>
   <body>
     {% block content %}
-    <div class="col-sm">
-      <div class="col-sm mb-3">
-        <div class="card" style="width: 18rem;">
-          <img src="{{ movie.Poster}}" class="card-img-top" alt="movie poster">
-          <div class="card-body">
-            <h5 class="card-title">{{ movie.Title | title }}</h5>
-            <p class="card-text">{{ movie.Year }}</p>
 
-          </div>
+    <!--movie poster (image file)-->
+    <div class="col-sm-3 mb-3">
+      <img src="{{ movie.Poster}}" class="img-fluid rounded" alt="movie poster">
+    </div>
+
+    <!-- movie details-->
+    <div class="col-sm mb-3">
+      <div class="card">
+
+        <div class="card-body">
+          <h3 class="card-title">{{ movie.Title | title }}</h3>
+          <p class="card-text">{{ movie.Year }} {{ movie.Rated }} </p>
+
+          {% for item in movie.Genre.split(",") %}
+          <button class="btn btn-outline-dark disabled">{{ item }}</button>
+          {% endfor %}
+
+          <p>{{ movie.Plot }}</p>
+          <p class="card-text">{{ movie.Director }}</p>
+          <p class="card-text">{{ movie.Actors }}</p>
+          <p class="card-text">{{ movie.imdbRating }}</p>
+
+          <p class="card-text"></p>
+          <!---->
+
+          <p class="card-text"></p>
+          <!--Director-->
+          <p class="card-text"></p>
+          <!--Stars-->
+          <p class="card-text"></p>
+
         </div>
-
       </div>
-      {% endblock %}
+    </div>
+
+    {% endblock %}
   </body>
 </html>
