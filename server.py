@@ -2,17 +2,24 @@ from flask import Flask, render_template, url_for, request, flash, session,\
   redirect
 from markupsafe import escape
 import requests
-import os
+import os, time
+
+# Flask secret key
+secret_key = os.urandom(12)
+
 
 
 app = Flask(__name__)
 
-omdb_key = os.environ.get("OMDB_KEY")
-app.config["SECRET_KEY"] = omdb_key
+# app.config["SECRET KEY"] = secret_key
 
-# Flask secret key
-secret_key = os.urandom(12)
 app.secret_key =  secret_key
+
+
+omdb_key = os.environ.get("OMDB_KEY")
+
+
+
 
 
 omdb_api = f"http://www.omdbapi.com/?apikey={omdb_key}&s=batman"
@@ -103,13 +110,70 @@ def fav_movies():
   
   # get session:
   fav_list = session.get("favorites")
-  if  fav_list is  None:
+  print(f"fav_list: {fav_list}")
+
+
+  if  fav_list == None:
+    flash("Your Favorites list is empty")
+    
+    print(f"fav_list is None: {fav_list}")
     return redirect(url_for("mainpage"))
+
   else:
+    print(f"fav_list is occupied now: {fav_list}")
     return render_template(
       escape("fav-movies.html"),
       fav_list=fav_list
     )
+
+
+# add movies to favorites
+@app.route("/add_to_fav/<title>")
+def add_to_fav(title):
+  """add movies to Favorites function"""
+
+  fav_dict = dict()
+  # check if favorites exists
+  if "favorites" in session:
+    # add fav key to fav_dict
+   fav_dict = session.get("favorites")
+  
+  else:
+    # create a new fav key
+    session["favorites"] = dict()
+  
+  print(f"fav_dict before: {fav_dict}")
+
+  # store movie in favorites dict
+  fav_dict[title] = title
+
+  print(f"fav_dict after: {fav_dict}")
+
+  # add key to session
+  session["favorites"] = fav_dict
+
+  return redirect(url_for('mainpage'))
+
+
+# remove movies from favorites
+@app.route("/remove_mov<title>")
+def remove_movie(title):
+
+  # call favorites
+  fav_dict = session.get("favorites")
+  print(f"Favorites (remove route before removal): {fav_dict}")
+  # remove movie from favorites
+  fav_dict.pop(title, None)
+
+  # update session
+  session["favorites"] = fav_dict
+  print(f"Favorites (remove route after removal): {fav_dict}")
+
+  return redirect(url_for("fav_movies"))
+
+
+
+
 
 
 if __name__ == '__main__':

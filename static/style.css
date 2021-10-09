@@ -4,3 +4,6 @@ body {
 .container {
 	margin-top: 14%;
 }
+li {
+	list-style: none;
+}

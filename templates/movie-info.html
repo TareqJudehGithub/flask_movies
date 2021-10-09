@@ -17,7 +17,6 @@
     <!-- movie details-->
     <div class="col-sm mb-3">
       <div class="card">
-
         <div class="card-body">
           <h3 class="card-title">{{ movie.Title | title }}</h3>
           <p class="card-text">{{ movie.Year }} {{ movie.Rated }} </p>
@@ -31,15 +30,8 @@
           <p class="card-text">{{ movie.Actors }}</p>
           <p class="card-text">{{ movie.imdbRating }}</p>
 
-          <p class="card-text"></p>
-          <!---->
-
-          <p class="card-text"></p>
-          <!--Director-->
-          <p class="card-text"></p>
-          <!--Stars-->
-          <p class="card-text"></p>
-
+          <!--Add a movie to Favorites-->
+          <a class="btn btn-primary" href="{{ url_for('add_to_fav', title=movie.Title)}}">Add to Favorites</a>
         </div>
       </div>
     </div>

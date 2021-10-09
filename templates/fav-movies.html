@@ -9,14 +9,23 @@
   <body>
 
     {% block content %}
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
-    <h1>Fav movies!</h1>
+
+    {% for movie in fav_list %}
+
+    <div class="col-sm-6">
+      <div class="card">
+        <div class="card-body">
+          <p class="card-text">{{ movie }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-sm-6">
+      <a href="{{ url_for('movie_info', title=movie) }}" class="btn btn-primary">Info</a>
+      <a href="{{ url_for('remove_movie', title=movie) }}" class="btn btn-danger">Remove</a>
+    </div>
+
+    {% endfor %}
     {% endblock %}
-    asdsadadassss
+
   </body>
 </html>
