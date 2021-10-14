@@ -4,6 +4,46 @@ body {
 .container {
 	margin-top: 14%;
 }
+.row {
+	text-align: center;
+	margin: 0 auto;
+}
+.movies {
+	margin: 1%;
+	background-color: whitesmoke;
+}
+
+.card-homepage {
+	background-color: whitesmoke;
+}
+.adv-col-1 {
+	margin: 10px auto;
+}
+.adv-search-form {
+	padding: 15px;
+}
+.select-type {
+}
+
+.adv-col-2 {
+	text-align: center;
+	padding: 1%;
+}
+.adv-col-3 {
+	text-align: left;
+	padding: 1%;
+}
+
+.adv-img {
+	height: 100%;
+}
+
 li {
 	list-style: none;
+}
+.flashes {
+	margin-top: 50px;
+}
+.flash-msg {
+	text-align: center;
 }

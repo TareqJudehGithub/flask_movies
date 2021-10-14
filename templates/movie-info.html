@@ -1,7 +1,7 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
-    {% extends 'template.html' %}
+    {% extends "template.html" %}
     {% block head %}
     {{ super() }}
     {% endblock %}
@@ -9,33 +9,28 @@
   <body>
     {% block content %}
 
-    <!--movie poster (image file)-->
-    <div class="col-sm-3 mb-3">
-      <img src="{{ movie.Poster}}" class="img-fluid rounded" alt="movie poster">
+    <!-- movie poster-->
+    <div class="col-sm-4">
+      <img class="img-fluid" src="{{ movie.Poster | safe }}" alt="movie poster" style="margin-left: 3%">
     </div>
 
     <!-- movie details-->
-    <div class="col-sm mb-3">
-      <div class="card">
-        <div class="card-body">
-          <h3 class="card-title">{{ movie.Title | title }}</h3>
-          <p class="card-text">{{ movie.Year }} {{ movie.Rated }} </p>
-
-          {% for item in movie.Genre.split(",") %}
-          <button class="btn btn-outline-dark disabled">{{ item }}</button>
-          {% endfor %}
-
-          <p>{{ movie.Plot }}</p>
-          <p class="card-text">{{ movie.Director }}</p>
-          <p class="card-text">{{ movie.Actors }}</p>
-          <p class="card-text">{{ movie.imdbRating }}</p>
-
-          <!--Add a movie to Favorites-->
-          <a class="btn btn-primary" href="{{ url_for('add_to_fav', title=movie.Title)}}">Add to Favorites</a>
-        </div>
+    <div class="col-sm-8">
+      <div class="card-body">
+        <h5 class="card-title">{{ movie.Title | title | safe }}</h5>
+        <p class="card-text">{{ movie.Year }}</p>
+        {% for item in movie.Genre.split(",") %}
+        <p class="card-text btn btn-outline-dark disabled">{{ item | title | safe }}</p>
+        {% endfor %}
+        <p>{{ movie.Plot }}</p>
+        <p class="card-text"><strong>Director</strong> {{ movie.Director }}</p>
+        <p class="card-text"><strong>Stars</strong> {{ movie.Actors }}</p>
+        <p class="card-text"><strong>IMDB</strong> {{ movie.imdbRating }}/10</p>
+        <!-- <a href="#" class="btn btn-secondary">Add to Favorites</a> -->
       </div>
     </div>
 
     {% endblock %}
+
   </body>
 </html>

@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     {% extends 'template.html' %}
@@ -6,27 +6,30 @@
     {{ super() }}
     {% endblock %}
   </head>
-
   <body>
 
     {% block content %}
 
-
     {% for movie in movies.Search %}
 
-    <div class="col-sm mb-3">
-      <div class="card" style="width: 18rem;">
-        <img src="{{ movie.Poster}}" class="card-img-top" alt="movie poster">
-        <div class="card-body">
-          <h5 class="card-title">{{ movie.Title | title }}</h5>
-          <p class="card-text">{{ movie.Year }}</p>
-          <a href="{{ url_for('movie_info', title=movie.Title) }}" class="btn btn-primary">Info</a>
+    <div class="col-sm movies">
+      <a href="{{ url_for('movie_info', title=movie.Title) }}">
+        <div class="card" style="width: 19rem;">
+
+          <img src="{{ movie.Poster | safe }}" class="card-img-top img-fluid" alt="movie poster" style="height: 350px">
+
+          <div class="card-body card-homepage">
+            <h5 class="card-title" style="font-size: 16px">
+              {{ movie.Title | title | safe }}
+            </h5>
+
+          </div>
         </div>
-      </div>
+      </a>
 
     </div>
-    {% endfor %}
 
+    {% endfor %}
 
     {% endblock %}
 

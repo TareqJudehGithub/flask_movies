@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        {% extends 'template.html' %}
+        {% block head %}
+        {{ super() }}
+        {% endblock %}
+    </head>
+    <body>
+        {% block content %}
+        {% for movie in movies.Search %}
+        <div class="col-sm movies">
+            <a href="{{ url_for('movie_info', title=movie.Title) }}">
+                <div class="card" style="width: 19rem;">
+
+                    <img src="{{ movie.Poster | safe }}" class="card-img-top img-fluid" alt="movie poster"
+                        style="height: 350px">
+
+                    <div class="card-body">
+                        <h5 class="card-title" style="font-size: 16px">
+                            {{ movie.Title | title | safe }}
+                        </h5>
+
+                    </div>
+                </div>
+            </a>
+
+        </div>
+        {% endfor %}
+        {% endblock %}
+
+
+    </body>
+</html>

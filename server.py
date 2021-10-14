@@ -2,11 +2,10 @@ from flask import Flask, render_template, url_for, request, flash, session,\
   redirect
 from markupsafe import escape
 import requests
-import os, time
+import os, pprint
 
 # Flask secret key
 secret_key = os.urandom(12)
-
 
 
 app = Flask(__name__)
@@ -16,93 +15,113 @@ app = Flask(__name__)
 app.secret_key =  secret_key
 
 
+# omdb API 
 omdb_key = os.environ.get("OMDB_KEY")
+response = f"http://www.omdbapi.com/?apikey={omdb_key}&s=home&type=movie"
+data = requests.get(url=response)
 
 
-
-
-
-omdb_api = f"http://www.omdbapi.com/?apikey={omdb_key}&s=batman"
-data = requests.get(url=omdb_api)
-
-# mainpage route
-@app.route("/")
-def mainpage():
+@app.route('/')     # homepage route
+def homepage():
 
   movies = data.json()
 
   return render_template(
-    escape("index.html"),
-    movies=movies
-  )
+      escape("index.html"),
+      movies=movies
+)
 
-# change webpage dynamically
-@app.route("/string:<webpage>")
-def render_page(webpage):
-  return render_template(webpage)
+# movie details page
+@app.route("/movie-info/<title>")
+def movie_info(title):
+    movie = requests.get(
+        url=f"http://www.omdbapi.com/?apikey={omdb_key}&t={title}"
+    ).json()
+     
+    return render_template(
+        escape("movie-info.html"),
+        movie=movie
+    )
 
 
-# search movies route
+# selected movie titles
 @app.route("/<title>")
 def movies_by_title(title):
   movies = requests.get(
-    url=f"http://www.omdbapi.com/?apikey=deec4c57&s={title}"
+      url=f"http://www.omdbapi.com/?apikey={omdb_key}&s={title}"
   ).json()
 
   return render_template(
-    escape("index.html"),
-    movies=movies
+      escape("index.html"),
+      movies=movies
   )
 
-
-# movie information route
-@app.route("/movie_info/<title>")
-def movie_info(title):
-  movie = requests.get(
-    url=f"http://www.omdbapi.com/?apikey=deec4c57&t={title}"
-  ).json()
-
-  return render_template(
-    escape("movie-info.html"),
-    movie=movie
-  )
 
 # search form
-@app.route("/search-form")
-def search_form():
-  return render_template(escape("search-form.html"))
+@app.route('/search-movies', methods=["GET", "POST"])
+def search_movies():
+  if request.method == "POST":
+    title = request.form["title"]
+    year = request.form["year"]
+    type = request.form["type"]
+        
+    # advanced search filters
+    if year != "" or type != "":
+        movie = requests.get(
+          url=f"http://www.omdbapi.com/?apikey=deec4c57&t={title}&y={year}&type={type}"
+          ).json()
+    else:
+      movie = requests.get(
+        url=f"http://www.omdbapi.com/?apikey={omdb_key}&t={title}"
+      ).json()
 
-
-# search by title
-@app.route("/search_title", methods=["POST"])
-def search_title():
-  # data = request.form.to_dict()
-  # title = data["title"]
-  # year = data["year"]
-  title = request.form["title"]
-  year = request.form["year"]
- 
-  # in case user filled in Year field
-  if  year != "":
-    movie = requests.get(
-      url=f"http://www.omdbapi.com/?apikey=deec4c57&t={title}&y={year}"
-    ).json()
+    # title not found flash message
+    if movie["Response"] == "False":
+      flash("Title not found!")
+      return render_template(
+        escape("search-form.html")
+      )
+      
+    return render_template(
+        escape("search-form.html"),
+        movie=movie
+    )
   else:
-    movie = requests.get(
-      url=f"http://www.omdbapi.com/?apikey=deec4c57&t={title}"
-    ).json()
+    return render_template(
+          escape("search-form.html")
+    )
+
+
+# search form - link
+@app.route('/search-nav', methods=["POST"])
+def search_nav():
+
+    search_mov = request.form["search_mov"]
+    
+    movies = requests.get(url=f"http://www.omdbapi.com/?apikey={omdb_key}&s={search_mov}").json()
+
+    # title not found flash message
+    if movies["Response"] == "False":
+      flash("Title not found! Kindly check title spelling and try again.")
+      return render_template(
+        escape("search-form.html")
+      )
+    
+    return render_template(
+        escape("search-nav.html"),
+        movies=movies
+     )
   
 
-  # in case movie title was not found
-  flash("Movie not found!")
+# ===========================================================
+  # # in case movie title was not found
+  # flash("Movie not found!")
 
-  if movie["Response"] == "False":
-    return "Movie not found :("
+  # if movie["Response"] == "False":
+  #   return "Movie not found :("
 
-  return render_template(escape("search-form.html"), movie=movie)
+  # return render_template(escape("search-form.html"), movie=movie)
 
-
-# combine both search_form and search_title in one route
   
 # Favorites
 @app.route("/fav_movies")
@@ -117,7 +136,7 @@ def fav_movies():
     flash("Your Favorites list is empty")
     
     print(f"fav_list is None: {fav_list}")
-    return redirect(url_for("mainpage"))
+    return redirect(url_for("homepage"))
 
   else:
     print(f"fav_list is occupied now: {fav_list}")
@@ -152,7 +171,7 @@ def add_to_fav(title):
   # add key to session
   session["favorites"] = fav_dict
 
-  return redirect(url_for('mainpage'))
+  return redirect(url_for('homepage'))
 
 
 # remove movies from favorites

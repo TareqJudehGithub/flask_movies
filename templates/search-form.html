@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     {% extends 'template.html' %}
@@ -9,64 +9,73 @@
   <body>
     {% block content %}
 
-    <form class="col-sm" action="{{ url_for('search_title')}}" method="POST">
-      <div class="col-sm-12 mb-3">
-        <label for="valditationTitle" class="form-label">Title</label>
-        <input type="text" class="form-control" name="title" id="valditationTitle" placeholder="Enter a movie title"
-          required>
-      </div>
-      <div class="col-sm-12 mb-3">
-        <label for="valditationYear" class="form-label">Year</label>
-        <input type="number" class="form-control" name="year" id="valditationYear" placeholder="Movie release date">
-      </div>
-      <button type="submit" class="btn btn-primary">Search</button>
-    </form>
+    <div class="col-lg-4 col-md-12 col-sm-12 shadow adv-col-1">
+      <form action="{{ url_for('search_movies') }}" method="POST" class="row g-3 adv-search-form">
+        <h4>Looking for a certain title?</h4>
+        <div class="col-sm-12">
+          <div class="form-floating">
+            <input type="text" class="form-control" id="floatingTitle" name="title" placeholder="Movie title" required>
+            <label for="floatingTitle">Movie title</label>
+          </div>
+        </div>
+
+        <div class="col-sm-12">
+          <div class="form-floating">
+            <input type="number" class="form-control" id="floatingYear" name="year" placeholder="Year">
+            <label for="floatingYear">Year</label>
+          </div>
+        </div>
+        <div class="col-sm-12">
+          <select class="form-select select-type" name="type" aria-label="Default select example">
+            <option value="movie" selected>Title Type</option>
+            <option value="movie">Movie</option>
+            <option value="series">Series</option>
+          </select>
+        </div>
+
+        <button class="btn btn-outline-dark mt-4 mb-3" type="submit">Search</button>
+
+      </form>
+    </div>
+
     {% endblock %}
 
     {% block form %}
 
-
     {% if movie %}
 
-    <!--movie poster (image file)-->
     {% if movie.Poster %}
-    <div class="col-sm-4 mb-3">
-      <img src="{{ movie.Poster }}" class="img-fluid rounded" alt="movie poster">
+
+    <div class="col-lg-4 col-md-6 col-sm-12 adv-col-2">
+      <img src="{{ movie.Poster | safe }}" class="img-fluid rounded adv-img" alt="movie poster">
     </div>
     {% endif %}
 
-
     <!-- movie details-->
-    <div class="col-sm-4 mb-3">
-
+    <div class="col-lg-4 col-md-6 col-sm-12 adv-col-3">
       <div class="card">
         <div class="card-body">
-          <h3 class="card-title">{{ movie.Title | title }}</h3>
-          <p class="card-text">{{ movie.Year }} {{ movie.Rated }} </p>
+          <h3 class="card-title">{{ movie.Title | title | safe }}</h3>
+          <p class="card-text">{{ movie.Year | safe }} | {{ movie.Rated | safe }} </p>
 
           {% if movie.Genre %}
           {% for item in movie.Genre.split(",") %}
-          <button class="btn btn-outline-dark disabled">{{ item }}</button>
+          <button class="btn btn-outline-dark disabled mb-3">{{ item | safe }}</button>
           {% endfor %}
           {% endif %}
-
           <p>{{ movie.Plot }}</p>
-          <p class="card-text">{{ movie.Director }}</p>
-          <p class="card-text">{{ movie.Actors }}</p>
-          <p class="card-text">{{ movie.imdbRating }}</p>
+          <p class="card-text"><strong>Director</strong> {{ movie.Director }}</p>
+          <p class="card-text"><strong>Stars</strong> {{ movie.Actors }}</p>
+          <p class="card-text"><strong>IMDB</strong> {{ movie.imdbRating }}/10</p>
+          <!-- <a href="#" class="btn btn-secondary">Add to Favorites</a> -->
         </div>
       </div>
-
     </div>
 
     {% else %}
     <div></div>
     {% endif %}
-
     {% endblock %}
-
-
-
 
   </body>
 </html>
